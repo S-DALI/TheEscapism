@@ -12,7 +12,6 @@ namespace Assets
         public int LevelsCounter = 1;
         void Start()
         {
-            PlayerPrefs.DeleteAll();
             int LevelsReached = PlayerPrefs.GetInt("LevelReached", LevelsCounter);
             for (int i = 0; i < levels.Length; i++)
             {

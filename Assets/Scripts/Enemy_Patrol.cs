@@ -159,7 +159,7 @@ namespace Assets
         {
             if (HP.currentHealth > 0 && HP.currentHealth <= 25 && NumberHpPoision > 0)
             {
-                SmokeBlink.SetTrigger("blink");
+                SmokeBlink.SetTrigger("WormDead");
                 Enemy.transform.position = new Vector2(player.transform.position.x+DistanceSmoke,Enemy.position.y);
                 HP.currentHealth += 50;
                 NumberHpPoision--;

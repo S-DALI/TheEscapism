@@ -7,8 +7,8 @@ namespace Assets {
     public class PortalScriptLevelsComplete : MonoBehaviour
     {
         [SerializeField] private int EnemyinLevel;
-      
-        private void OnCollisionEnter2D(Collision2D collision)
+
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject == Hero.Instance.gameObject)
             {
@@ -16,7 +16,7 @@ namespace Assets {
                 SceneManager.LoadScene(1);
             }
         }
-
+ 
         private void UnlockLevel()
         {
             int CurrentLevel = SceneManager.GetActiveScene().buildIndex;
