@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hurt
+  m_Name: HeroAttackRun
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -19,14 +19,12 @@ AnimationClip:
   m_FloatCurves: []
   m_PPtrCurves:
   - curve:
-    - time: 0
-      value: {fileID: -8008791250619013794, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
     - time: 0.083333336
-      value: {fileID: 3891156215361153934, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
+      value: {fileID: 21300026, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
     - time: 0.16666667
-      value: {fileID: -7146689698409757683, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
+      value: {fileID: 21300028, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
     - time: 0.25
-      value: {fileID: 8523606802079886837, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
+      value: {fileID: 21300030, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
     attribute: m_Sprite
     path: Square
     classID: 212
@@ -46,10 +44,9 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: -8008791250619013794, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
-    - {fileID: 3891156215361153934, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
-    - {fileID: -7146689698409757683, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
-    - {fileID: 8523606802079886837, guid: f580298770d37ed46b0dc8a4cdf69c6c, type: 3}
+    - {fileID: 21300026, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
+    - {fileID: 21300028, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
+    - {fileID: 21300030, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

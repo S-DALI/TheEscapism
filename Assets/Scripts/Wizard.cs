@@ -29,7 +29,7 @@ namespace Assets
         private bool IsGround;
         private bool Jump1;
         private bool Jump2;
-        private bool FacingRight = false;
+        private bool FacingRight = true;
         private Rigidbody2D Rigidbody;
         private Hero PlayerHero;
         private Animator AnimatorWizard;

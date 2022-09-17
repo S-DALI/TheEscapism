@@ -171,7 +171,7 @@ namespace Assets
             if (CheckCollider) state = States.Run;
             Vector3 run = transform.right * joystick.Horizontal;
             transform.position = Vector3.MoveTowards(transform.position, transform.position + run, speed * Time.deltaTime);
-            sprite.flipX = run.x > 0.0f;
+            sprite.flipX = run.x < 0.0f;
             if(HorizontalDirection>0 && joystick.Horizontal < 0|| HorizontalDirection<0 && joystick.Horizontal > 0) 
             {
                 attackPoint.localPosition = new Vector3(-attackPoint.localPosition.x, attackPoint.localPosition.y, 0);
@@ -292,7 +292,7 @@ namespace Assets
         }
         public void Attack()
         {
-            if (joystick.Horizontal == 0 && CheckCollider && HeroBlock == false && HP > 0)
+            if (/*joystick.Horizontal == 0 &&*/ CheckCollider && HeroBlock == false && HP > 0)
             {
                 HeroBlock = false;
                 HeroAttack = true;

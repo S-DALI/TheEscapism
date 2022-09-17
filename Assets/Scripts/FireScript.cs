@@ -17,8 +17,7 @@ namespace Assets
                 TimerHPHeal = 0;
             }
         }
-
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerStay2D(Collider2D collision)
         {
             if (collision.gameObject.name.Equals("Hero"))
             {
@@ -28,8 +27,8 @@ namespace Assets
                     HeroHP.HP++;
                 }
             }
-
         }
+        
     }
 }
 

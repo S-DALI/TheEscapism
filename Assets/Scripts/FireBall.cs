@@ -16,7 +16,7 @@ namespace Assets
         {
             Destroy(gameObject, LifeTime);
         }
-        private void Update()
+        private void FixedUpdate()
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Direction, Distance, Solid);
             if(hit.collider !=null)
