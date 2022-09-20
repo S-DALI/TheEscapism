@@ -15,12 +15,12 @@ namespace Assets
         [SerializeField] private Hero PlayerHP;
         [SerializeField] private AudioSource Attack;
         private float attackTimer = Mathf.Infinity;
-        private Animator blue_bandit;
+        private Animator Anim;
 
 
         private void Awake()
         {
-            blue_bandit = GetComponent<Animator>();
+            Anim = GetComponent<Animator>();
         }
         private void Update()
         {
@@ -32,7 +32,7 @@ namespace Assets
                 {
                    
                     attackTimer = 0;
-                    blue_bandit.SetTrigger("Attack");
+                    Anim.SetTrigger("Attack");
                 }
             }
         }

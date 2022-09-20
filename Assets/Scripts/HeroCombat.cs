@@ -6,24 +6,24 @@ namespace Assets
 {
     public class HeroCombat : MonoBehaviour
     {
-        public Animator animator;
+        [SerializeField] private AudioSource AttackSound;
         public Transform AttackPoint;
         public LayerMask enemyLayers;
         private SpriteRenderer sprite;
-        public int AttackDamage = 20;
         public float AttackRange = 0.5f;
         
 
-        public void Attack()
+        public void TakeDamage(int Damage)
         {
-
-            animator.SetTrigger("Attack");
+            AttackSound.Play();
             Collider2D[] EnemyColliders = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, enemyLayers);
-            foreach (Collider2D enemy in EnemyColliders)
+            if (EnemyColliders != null)
             {
-                enemy.GetComponent<MonstersHealth>().GetDamage(AttackDamage);
+                foreach (Collider2D enemy in EnemyColliders)
+                {
+                    enemy.GetComponent<MonstersHealth>().GetDamage(Damage);
+                }
             }
-
         }
         public void OnDrawGizmosSelected()
         {

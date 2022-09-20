@@ -11,14 +11,14 @@ namespace Assets
         [SerializeField] private Hero HeroHP;
         private void Update()
         {
-            TimerHPHeal += Time.deltaTime;
             if(TimerHPHeal>=6)
             {
                 TimerHPHeal = 0;
             }
         }
         private void OnTriggerStay2D(Collider2D collision)
-        {
+        { 
+            TimerHPHeal += Time.deltaTime;
             if (collision.gameObject.name.Equals("Hero"))
             {
                 if(HeroHP.HP<10 && HeroHP.HP>0 && TimerHPHeal>=CoolDawnHPHeal)

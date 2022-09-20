@@ -34,7 +34,7 @@ namespace Assets
         private bool TakeDamage = false;
         private bool GetDamageHero = true;
         public int CurrentKill = 0;
-
+        private int CurrentAttack = 0;
 
         [Header("Stamina UI")]
         [SerializeField] int Stamina = 5;
@@ -56,7 +56,6 @@ namespace Assets
         [Header("Audio")]
         [SerializeField] private AudioSource jump;
         [SerializeField] private AudioSource Hurt;
-        [SerializeField] private AudioSource AttackSound;
         [SerializeField] private AudioSource RunSound;
         [SerializeField] private AudioSource DeadSound;
         protected override void Awake()
@@ -71,11 +70,6 @@ namespace Assets
             RunSound.Play();
             RunSound.Pause();
         }
-        void Start()
-        {
-
-        }
-
         void FixedUpdate()
         {
             CheckGround();
@@ -87,7 +81,7 @@ namespace Assets
             BlinkTimer += Time.deltaTime;
             if(Stamina<10)
                 TimerStamina += Time.deltaTime;
-            if (onground && joystick.Horizontal == 0 && joystick.Vertical < 0.5f && HeroBlock == false ) state = States.IDLE;
+            if (onground && joystick.Horizontal == 0 && joystick.Vertical < 0.5f && HeroBlock == false ) animator.SetTrigger("IDLE");
             if (joystick.Horizontal == 0 || !onground || HP<=0)
             {
                 RunSound.Pause();
@@ -148,8 +142,6 @@ namespace Assets
             {
                 BlinkTimer = 0;
                 Stamina--;
-                animator.StopPlayback();
-                state = States.Blink;
                 animator.Play("Blink");
                 if (joystick.Horizontal > 0)
                 {
@@ -168,7 +160,7 @@ namespace Assets
             TakeDamage = false;
             if(CheckCollider&& HP>0)
                 RunSound.UnPause();
-            if (CheckCollider) state = States.Run;
+            if (CheckCollider) animator.SetTrigger("Run");
             Vector3 run = transform.right * joystick.Horizontal;
             transform.position = Vector3.MoveTowards(transform.position, transform.position + run, speed * Time.deltaTime);
             sprite.flipX = run.x < 0.0f;
@@ -196,25 +188,8 @@ namespace Assets
         {
             Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f, canStayLayerMask);
             CheckCollider = collider.Length >= 1;
-            if (!CheckCollider) state = States.Jump;
+            if (!CheckCollider) animator.SetTrigger("Jump");
         }
-        public enum States
-        {
-            IDLE,
-            Run,
-            Jump,
-            Block,
-            BeatAttack,
-            Dead,
-            Hurt,
-            Blink
-        }
-        private States state
-        {
-            get { return (States)animator.GetInteger("state"); }
-            set { animator.SetInteger("state", (int)value); }
-        }
-
 
         public void GetDamage(int damage)
         {
@@ -223,6 +198,7 @@ namespace Assets
 
                 if (HP > 0)
                 {
+                    animator.ResetTrigger("Block");
                     animator.SetTrigger("Hurt");
                     HP -= damage;
                     Hurt.Play();
@@ -239,7 +215,7 @@ namespace Assets
                     this.enabled = false;
                     animator.SetTrigger("Dead");
                     GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
-                    GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+                    //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
                     GetComponent<Collider2D>().enabled = false;
                 }
             }
@@ -247,7 +223,7 @@ namespace Assets
             {
                 Stamina-=2;
                 TakeDamage = true;
-                state = States.BeatAttack;
+                animator.SetTrigger("BeatAttack");
             }
         }
         public void GetDamageFromTrap()
@@ -268,9 +244,8 @@ namespace Assets
                 }
                 this.enabled = false;
                 animator.SetTrigger("Dead");
-                rb.isKinematic = true;
                 GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
-                GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+                //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
                 GetComponent<Collider2D>().enabled = false;
             }
         }
@@ -292,19 +267,33 @@ namespace Assets
         }
         public void Attack()
         {
-            if (/*joystick.Horizontal == 0 &&*/ CheckCollider && HeroBlock == false && HP > 0)
+            if ( CheckCollider && HeroBlock == false && HP > 0)
             {
                 HeroBlock = false;
                 HeroAttack = true;
                 GetDamageHero = true;
                 if (attackTimer >= attaclCoolDawn)
                 {
-                    attackTimer = 0;
-                    AttackSound.Play();
-                    her.Attack();
+                    CurrentAttack++;
+                    
+                    if (Stamina > 0)
+                    {
+                        if (CurrentAttack > 3)
+                        {
+                            CurrentAttack = 1;
+                        }
+                        if (attackTimer > 0.7f)
+                        {
+                            CurrentAttack = 1;
+                        }
+                        animator.SetTrigger("Attack" + CurrentAttack);
+                        attackTimer = 0;
+                        Stamina--;
+                    }
                 }
             }
         }
+
 
         public void Block()
         {
@@ -312,7 +301,7 @@ namespace Assets
             {
                 HeroBlock = true;
                 GetDamageHero = false;
-                state = States.Block;
+                animator.SetTrigger("Block");
             }
         }
         

@@ -48,12 +48,6 @@ namespace Assets
             if (onground && Input.GetKeyDown("w") )
                 Jump();
 
-            if (Input.GetKeyDown(KeyCode.Space) && !Input.GetButton("Horizontal") && onground)
-            {                
-                
-                her.Attack();
-
-            }
         }
 
         private void Run()
