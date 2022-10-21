@@ -23,8 +23,6 @@ namespace Assets
         [Header("Other Parameters")]
         private Rigidbody2D rb;
         private SpriteRenderer sprite;
-        protected bool CheckCollider = false;
-        private bool Is_player_on_floor;
         private Animator animator;
         private HeroCombat her;
         private float HorizontalDirection = 1;
@@ -35,6 +33,8 @@ namespace Assets
         private bool GetDamageHero = true;
         public int CurrentKill = 0;
         private int CurrentAttack = 0;
+        private SensorScript m_groundSensor;
+        private bool m_grounded = false;
 
         [Header("Stamina UI")]
         [SerializeField] int Stamina = 5;
@@ -67,30 +67,46 @@ namespace Assets
             sprite = GetComponentInChildren<SpriteRenderer>();
             animator = GetComponent<Animator>();
             her = GetComponent<HeroCombat>();
+            m_groundSensor = transform.Find("GroundSensor").GetComponent<SensorScript>();
             RunSound.Play();
             RunSound.Pause();
         }
-        void FixedUpdate()
-        {
-            CheckGround();
-        }
         void Update()
         {
-            bool onground = CheckCollider;
             attackTimer += Time.deltaTime;
             BlinkTimer += Time.deltaTime;
             if(Stamina<10)
                 TimerStamina += Time.deltaTime;
-            if (onground && joystick.Horizontal == 0 && joystick.Vertical < 0.5f && HeroBlock == false ) animator.SetTrigger("IDLE");
-            if (joystick.Horizontal == 0 || !onground || HP<=0)
+
+            if (!m_grounded && m_groundSensor.State())
+            {
+                m_grounded = true;
+                animator.SetBool("Grounded", m_grounded);
+            }
+
+            if (m_grounded && !m_groundSensor.State())
+            {
+                m_grounded = false;
+                animator.SetBool("Grounded", m_grounded);
+            }
+
+            if (m_grounded && joystick.Horizontal == 0 && joystick.Vertical < 0.5f && joystick.Vertical<0.5f && HeroBlock == false)
+            {
+                animator.SetTrigger("IDLE");
+            }
+
+            animator.SetFloat("AirSpeedY", rb.velocity.y);
+            if (joystick.Horizontal == 0 || !m_grounded || HP<=0)
             {
                 RunSound.Pause();
             }
-            if (joystick.Horizontal!=0)
+
+            if (joystick.Horizontal!=0 )
             {
                 Run();
             }
-            if (onground && joystick.Vertical>0.5f)
+
+            if (m_grounded && joystick.Vertical>0.5f)
             {
                 Jump();
             }
@@ -100,6 +116,7 @@ namespace Assets
                 TimerStamina = 0;
                 Stamina++;
             }
+
             if(HP>10)
             {
                 HP = 10;
@@ -138,7 +155,7 @@ namespace Assets
 
         public void Blink()
         {
-            if (CheckCollider && Stamina > 0 && joystick.Horizontal != 0 && BlinkTimer >= BlinkCD && HP>0)
+            if (m_grounded && Stamina > 0 && joystick.Horizontal != 0 && BlinkTimer >= BlinkCD && HP>0)
             {
                 BlinkTimer = 0;
                 Stamina--;
@@ -155,12 +172,14 @@ namespace Assets
         }
         private void Run()
         {
+
             HeroBlock = false;
             GetDamageHero = true;
             TakeDamage = false;
-            if(CheckCollider&& HP>0)
+            if(m_grounded && HP>0)
                 RunSound.UnPause();
-            if (CheckCollider) animator.SetTrigger("Run");
+            if (m_grounded) animator.SetTrigger("Run");
+            if (!m_grounded) animator.ResetTrigger("Run");
             Vector3 run = transform.right * joystick.Horizontal;
             transform.position = Vector3.MoveTowards(transform.position, transform.position + run, speed * Time.deltaTime);
             sprite.flipX = run.x < 0.0f;
@@ -177,18 +196,15 @@ namespace Assets
 
         private void Jump()
         {
+            animator.SetTrigger("Jump");
             HeroBlock = false;
             GetDamageHero = true;
             TakeDamage = false;
+            m_grounded = false;
+
             rb.velocity = Vector2.up * jumpF;
             jump.Play();
-        }
-
-        private void CheckGround()
-        {
-            Collider2D[] collider = Physics2D.OverlapCircleAll(transform.position, 0.3f, canStayLayerMask);
-            CheckCollider = collider.Length >= 1;
-            if (!CheckCollider) animator.SetTrigger("Jump");
+            m_groundSensor.Disable(0.2f);
         }
 
         public void GetDamage(int damage)
@@ -198,8 +214,10 @@ namespace Assets
 
                 if (HP > 0)
                 {
+                    
                     animator.ResetTrigger("Block");
                     animator.SetTrigger("Hurt");
+                    if (!m_grounded) animator.SetInteger("AnimState", 1);
                     HP -= damage;
                     Hurt.Play();
 
@@ -215,7 +233,7 @@ namespace Assets
                     this.enabled = false;
                     animator.SetTrigger("Dead");
                     GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
-                    //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+                    GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
                     GetComponent<Collider2D>().enabled = false;
                 }
             }
@@ -245,7 +263,7 @@ namespace Assets
                 this.enabled = false;
                 animator.SetTrigger("Dead");
                 GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
-                //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+                GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
                 GetComponent<Collider2D>().enabled = false;
             }
         }
@@ -267,7 +285,7 @@ namespace Assets
         }
         public void Attack()
         {
-            if ( CheckCollider && HeroBlock == false && HP > 0)
+            if ( m_grounded && HeroBlock == false && HP > 0)
             {
                 HeroBlock = false;
                 HeroAttack = true;
@@ -297,7 +315,7 @@ namespace Assets
 
         public void Block()
         {
-            if (CheckCollider && joystick.Horizontal == 0 && TakeDamage == false && HP > 0)
+            if (m_grounded && joystick.Horizontal == 0 && TakeDamage == false && HP > 0)
             {
                 HeroBlock = true;
                 GetDamageHero = false;

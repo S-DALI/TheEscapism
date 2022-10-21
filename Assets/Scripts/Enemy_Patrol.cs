@@ -161,7 +161,7 @@ namespace Assets
             {
                 SmokeBlink.SetTrigger("WormDead");
                 Enemy.transform.position = new Vector2(player.transform.position.x+DistanceSmoke,Enemy.position.y);
-                HP.currentHealth += 50;
+                HP.GetDamage(-50);
                 NumberHpPoision--;
                 Enemy.transform.localScale = new Vector2(-Enemy.transform.localScale.x, Enemy.localScale.y);
                 

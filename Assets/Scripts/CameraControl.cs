@@ -35,7 +35,7 @@ namespace Assets
             else PortalToThisLevel.SetActive(true);
             CamPos = player.position;
             CamPos.z = -10;
-            CamPos.y += 3f;
+            CamPos.y += 2f;
             transform.position = Vector3.Lerp(transform.position, CamPos, Time.deltaTime);
             
         }

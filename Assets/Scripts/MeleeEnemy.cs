@@ -49,7 +49,7 @@ namespace Assets
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(BoxCollider.bounds.center + transform.right * range * transform.localScale.x * colliderDistance, new Vector3(BoxCollider.bounds.size.x * range, BoxCollider.bounds.size.y, BoxCollider.bounds.size.y));
         }
-        private void DamagePlayer()
+        public void DamagePlayer()
         {
             if (PlayerinSign())
             {

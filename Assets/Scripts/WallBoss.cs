@@ -12,7 +12,7 @@ namespace Assets
         {
             Wall = GetComponent<Rigidbody2D>();
         }
-        private void Update()
+        protected virtual void Update()
         {
             if(HP_Boss.currentHealth<=0)
             {
