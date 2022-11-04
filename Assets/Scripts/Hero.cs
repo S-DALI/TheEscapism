@@ -285,7 +285,7 @@ namespace Assets
         }
         public void Attack()
         {
-            if ( m_grounded && HeroBlock == false && HP > 0)
+            if ( /*m_grounded && */HeroBlock == false && HP > 0)
             {
                 HeroBlock = false;
                 HeroAttack = true;

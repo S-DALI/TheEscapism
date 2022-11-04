@@ -10,7 +10,7 @@ namespace Assets {
         {
             rb_trap = GetComponent<Rigidbody2D>();
         }
-private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.name.Equals("Hero"))
                 rb_trap.isKinematic = false;
