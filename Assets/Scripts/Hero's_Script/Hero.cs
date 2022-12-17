@@ -9,7 +9,7 @@ namespace Assets
     public class Hero : Singleton<Hero>
     {
         [Header("Hero Parameters")]
-        [SerializeField] private float speed = 3f;
+        [SerializeField] public float speed = 3f;
         [SerializeField] public int HP = 10;
         [SerializeField] private float jumpF = 8f;
         [SerializeField] private Transform attackPoint;
@@ -62,6 +62,7 @@ namespace Assets
         {
             Stamina = 10;
             HP = 10;
+            m_grounded = false;
             base.Awake();
             rb = GetComponent<Rigidbody2D>();
             sprite = GetComponentInChildren<SpriteRenderer>();

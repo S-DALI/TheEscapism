@@ -7,7 +7,7 @@ namespace Assets
     public class MonstersHealth : MonoBehaviour
     {
         [SerializeField] public Animator Monster;
-        [SerializeField] private int MaxHealth =100;
+        [SerializeField] public int MaxHealth =100;
         public int currentHealth = 0;
         public delegate void Action(float a);
         public event Action HealthChanged;
